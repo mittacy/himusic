@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package api.scores.v1;
+
+option go_package = "scores/api/scores/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.scores.v1";
+
+import "google/api/annotations.proto";
+
+service Scores {
+    rpc UpdateScores (UpdateScoresRequest) returns (UpdateScoresReply) {
+        option (google.api.http) = {
+            put: "/v1/scores"
+            body: "*"
+        };
+    }
+    rpc GetScores (GetScoresRequest) returns (GetScoresReply) {
+        option (google.api.http) = {
+            get: "/v1/scores/{id}"
+        };
+    }
+}
+
+message UpdateScoresRequest {
+    int32 id = 1;                // 用户id
+    int32 score = 2;             // +2:增加2积分, -2:减少2积分
+}
+message UpdateScoresReply {}
+
+message GetScoresRequest {
+    int32 id = 1;
+}
+message GetScoresReply {
+    int32 score = 1;
+}
