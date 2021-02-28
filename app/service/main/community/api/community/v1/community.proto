@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package api.community;
+
+option go_package = "community/api/community;community";
+option java_multiple_files = true;
+option java_package = "api.community";
+
+import "google/api/annotations.proto";
+
+service CommunityService {
+    rpc CreateCommunity (CreateCommunityRequest) returns (CreateCommunityReply) {
+        option (google.api.http) = {
+            post: "/v1/community"
+            body: "*"
+        };
+    }
+    rpc UpdateCommunity (UpdateCommunityRequest) returns (UpdateCommunityReply) {
+        option (google.api.http) = {
+            put: "/v1/community"
+            body: "*"
+        };
+    }
+    rpc DeleteCommunity (DeleteCommunityRequest) returns (DeleteCommunityReply) {
+        option (google.api.http) = {
+            delete: "/v1/community/{id}"
+        };
+    }
+    rpc GetCommunity (GetCommunityRequest) returns (GetCommunityReply) {
+        option (google.api.http) = {
+            get: "/v1/community/{id}"
+        };
+    }
+    rpc ListCommunity (ListCommunityRequest) returns (ListCommunityReply) {
+        option (google.api.http) = {
+            get: "/v1/community"
+        };
+    }
+}
+
+message Community {
+    int32 id = 1;
+    string name = 2;
+    string icon = 3;
+}
+
+message CreateCommunityRequest {
+    string name = 1;
+    string icon = 2;
+}
+message CreateCommunityReply {
+    int32 id = 1;
+}
+
+message UpdateCommunityRequest {
+    int32 id = 1;
+    string name = 2;
+    string icon = 3;
+}
+message UpdateCommunityReply {}
+
+message DeleteCommunityRequest {
+    int32 id = 1;
+}
+message DeleteCommunityReply {
+}
+
+message GetCommunityRequest {
+    int32 id = 1;
+}
+message GetCommunityReply {
+    Community Community = 1;
+}
+
+message ListCommunityRequest {}
+message ListCommunityReply {
+    repeated Community results = 1;
+}
