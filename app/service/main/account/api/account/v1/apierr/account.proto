@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package api.account.v1.apierr;
+
+import "kratos/api/annotations.proto";
+
+// 多语言特定包名，用于源代码引用
+option go_package = "github.com/mittacy/himusic/account/api/v1/apierr;apierr";
+option java_multiple_files = true;
+option java_package = "account.v1.apierr";
+option objc_class_prefix = "APICommunityErrors";
+
+enum Community {
+    option (kratos.api.errors) = true;
+    EmailNoFound = 0;   // 邮箱不存在
+    EmailExists = 1;    // 邮箱已被注册
+    UserNoFound = 2;    // 用户不存在
+    NameExists = 3;     // 用户名已存在
+    PageInvalid = 4;    // 页码页大小参数不正确
+    EmptyIcon = 5;      // 缺少头像地址
+    EmptyPassword = 6;  // 缺少密码
+    EmptyName = 7;      // 缺少名字
+    EmptyEmail = 8;     // 缺少邮箱
+    MysqlErr = 9;       // Mysql操作错误
+    RedisErr = 10;      // Redis操作错误
+    CodeErr = 11;       // 验证码错误
+    FieldInvalid = 12;   // 字段不符合规定
+    NilPointer = 13;    // 空指针
+}

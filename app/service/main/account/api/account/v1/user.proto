@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package api.account.v1;
+
+option go_package = "account/api/account/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.account.v1";
+
+import "google/api/annotations.proto";
+
+service User {
+    rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+        option (google.api.http) = {
+            post: "/v1/user"
+            body: "*"
+        };
+    }
+    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+        option (google.api.http) = {
+            put: "/v1/user"
+            body: "*"
+        };
+    }   // 注意：传入的非0值都将被更新
+    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
+        option (google.api.http) = {
+            delete: "/v1/user/{id}"
+        };
+    }
+    rpc GetUser (GetUserRequest) returns (GetUserReply) {
+        option (google.api.http) = {
+            get: "/v1/user/{id}"
+        };
+    }
+    rpc ListUser (ListUserRequest) returns (ListUserReply) {
+        option (google.api.http) = {
+            get: "/v1/user"
+        };
+    }
+    rpc VerifyPasswordByName (VerifyPasswordByNameRequest) returns (VerifyPasswordReply) {
+        option (google.api.http) = {
+            post: "/v1/user_name_password"
+            body: "*"
+        };
+    }   // 通过Name登录
+    rpc VerifyPasswordByEmail (VerifyPasswordByEmailRequest) returns (VerifyPasswordReply) {
+        option (google.api.http) = {
+            post: "/v1/user_email_password"
+            body: "*"
+        };
+    }   // 通过email登录
+}
+
+message VerifyPasswordByNameRequest {
+    string name = 1;
+    string password = 2;
+}
+message VerifyPasswordReply {
+    bool correct = 1;
+}
+
+message VerifyPasswordByEmailRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message CreateUserRequest {
+    string name = 1;
+    string email = 2;
+    string password = 3;
+    string code = 4;
+}
+message CreateUserReply {
+    int32 id = 1;
+}
+
+message UpdateUserRequest {
+    /* way：修改什么, 默认为名字
+     * 1. Name: 修改名字
+     * 2. Icon: 修改头像
+     * 3. Password: 修改密码
+     * 4. Email: 修改邮箱
+     */
+    enum Way {
+        Name = 0;
+        Icon = 1;
+        Password = 2;
+        Email = 3;
+    }
+    Way way = 1;
+    int32 id = 2;
+    string name = 3;
+    string icon = 4;
+    string password = 5;
+    string email = 6;
+}
+message UpdateUserReply {}
+
+message DeleteUserRequest {
+    int32 id = 1;
+}
+message DeleteUserReply {}
+
+message GetUserRequest {
+    int32 id = 1;
+}
+message GetUserReply {
+    UserStruct user = 1;
+}
+
+message ListUserRequest {
+    int32 pageNum = 1;
+    int32 pageSize = 2;
+}
+message ListUserReply {
+    repeated UserStruct users = 1;
+}
+
+message UserStruct {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    string icon = 5;
+    int32 paper_count= 6;
+    int32 buy_count = 7;
+    int32 coin = 8;
+    int32 score = 9;
+    int64 create_time = 10;
+    int64 update_time = 11;
+    int64 login_time = 12;
+}
