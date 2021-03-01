@@ -25,8 +25,6 @@ type UserHTTPServer interface {
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
 
 	VerifyPasswordByEmail(context.Context, *VerifyPasswordByEmailRequest) (*VerifyPasswordReply, error)
-
-	VerifyPasswordByName(context.Context, *VerifyPasswordByNameRequest) (*VerifyPasswordReply, error)
 }
 
 func RegisterUserHTTPServer(s http1.ServiceRegistrar, srv UserHTTPServer) {
@@ -47,20 +45,6 @@ func _HTTP_User_CreateUser_0(srv interface{}, ctx context.Context, req *http.Req
 	return out, nil
 }
 
-func _HTTP_User_UpdateUser_0(srv interface{}, ctx context.Context, req *http.Request, dec func(interface{}) error) (interface{}, error) {
-	var in UpdateUserRequest
-
-	if err := dec(&in); err != nil {
-		return nil, err
-	}
-
-	out, err := srv.(UserServer).UpdateUser(ctx, &in)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func _HTTP_User_DeleteUser_0(srv interface{}, ctx context.Context, req *http.Request, dec func(interface{}) error) (interface{}, error) {
 	var in DeleteUserRequest
 
@@ -73,6 +57,20 @@ func _HTTP_User_DeleteUser_0(srv interface{}, ctx context.Context, req *http.Req
 	}
 
 	out, err := srv.(UserServer).DeleteUser(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func _HTTP_User_UpdateUser_0(srv interface{}, ctx context.Context, req *http.Request, dec func(interface{}) error) (interface{}, error) {
+	var in UpdateUserRequest
+
+	if err := dec(&in); err != nil {
+		return nil, err
+	}
+
+	out, err := srv.(UserServer).UpdateUser(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
@@ -111,20 +109,6 @@ func _HTTP_User_ListUser_0(srv interface{}, ctx context.Context, req *http.Reque
 	return out, nil
 }
 
-func _HTTP_User_VerifyPasswordByName_0(srv interface{}, ctx context.Context, req *http.Request, dec func(interface{}) error) (interface{}, error) {
-	var in VerifyPasswordByNameRequest
-
-	if err := dec(&in); err != nil {
-		return nil, err
-	}
-
-	out, err := srv.(UserServer).VerifyPasswordByName(ctx, &in)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func _HTTP_User_VerifyPasswordByEmail_0(srv interface{}, ctx context.Context, req *http.Request, dec func(interface{}) error) (interface{}, error) {
 	var in VerifyPasswordByEmailRequest
 
@@ -150,15 +134,15 @@ var _HTTP_User_serviceDesc = http1.ServiceDesc{
 		},
 
 		{
-			Path:    "/v1/user",
-			Method:  "PUT",
-			Handler: _HTTP_User_UpdateUser_0,
-		},
-
-		{
 			Path:    "/v1/user/{id}",
 			Method:  "DELETE",
 			Handler: _HTTP_User_DeleteUser_0,
+		},
+
+		{
+			Path:    "/v1/user",
+			Method:  "PUT",
+			Handler: _HTTP_User_UpdateUser_0,
 		},
 
 		{
@@ -174,13 +158,7 @@ var _HTTP_User_serviceDesc = http1.ServiceDesc{
 		},
 
 		{
-			Path:    "/v1/user_name_password",
-			Method:  "POST",
-			Handler: _HTTP_User_VerifyPasswordByName_0,
-		},
-
-		{
-			Path:    "/v1/user_email_password",
+			Path:    "/v1/verify_user_email",
 			Method:  "POST",
 			Handler: _HTTP_User_VerifyPasswordByEmail_0,
 		},

@@ -15,17 +15,17 @@ service User {
             body: "*"
         };
     }
+    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
+        option (google.api.http) = {
+            delete: "/v1/user/{id}"
+        };
+    }
     rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
         option (google.api.http) = {
             put: "/v1/user"
             body: "*"
         };
     }   // 注意：传入的非0值都将被更新
-    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
-        option (google.api.http) = {
-            delete: "/v1/user/{id}"
-        };
-    }
     rpc GetUser (GetUserRequest) returns (GetUserReply) {
         option (google.api.http) = {
             get: "/v1/user/{id}"
@@ -36,31 +36,21 @@ service User {
             get: "/v1/user"
         };
     }
-    rpc VerifyPasswordByName (VerifyPasswordByNameRequest) returns (VerifyPasswordReply) {
-        option (google.api.http) = {
-            post: "/v1/user_name_password"
-            body: "*"
-        };
-    }   // 通过Name登录
     rpc VerifyPasswordByEmail (VerifyPasswordByEmailRequest) returns (VerifyPasswordReply) {
         option (google.api.http) = {
-            post: "/v1/user_email_password"
+            post: "/v1/verify_user_email"
             body: "*"
         };
     }   // 通过email登录
 }
 
-message VerifyPasswordByNameRequest {
-    string name = 1;
-    string password = 2;
-}
-message VerifyPasswordReply {
-    bool correct = 1;
-}
 
 message VerifyPasswordByEmailRequest {
     string email = 1;
     string password = 2;
+}
+message VerifyPasswordReply {
+    bool correct = 1;
 }
 
 message CreateUserRequest {
@@ -74,24 +64,16 @@ message CreateUserReply {
 }
 
 message UpdateUserRequest {
-    /* way：修改什么, 默认为名字
-     * 1. Name: 修改名字
-     * 2. Icon: 修改头像
-     * 3. Password: 修改密码
-     * 4. Email: 修改邮箱
-     */
-    enum Way {
-        Name = 0;
-        Icon = 1;
-        Password = 2;
-        Email = 3;
-    }
-    Way way = 1;
-    int32 id = 2;
-    string name = 3;
-    string icon = 4;
-    string password = 5;
-    string email = 6;
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+    string salt = 5;
+    string icon = 6;
+    int32 paper_count = 7;
+    int32 buy_count = 8;
+    int32 coin = 9;
+    int32 score = 10;
 }
 message UpdateUserReply {}
 
@@ -117,14 +99,14 @@ message ListUserReply {
 
 message UserStruct {
     int32 id = 1;
-    string name = 2;
-    string email = 3;
-    string icon = 5;
-    int32 paper_count= 6;
-    int32 buy_count = 7;
-    int32 coin = 8;
-    int32 score = 9;
-    int64 create_time = 10;
-    int64 update_time = 11;
-    int64 login_time = 12;
+    int64 create_time = 2;
+    int64 update_time = 3;
+    int64 login_time = 4;
+    string name = 5;
+    string email = 6;
+    string icon = 7;
+    int32 paper_count = 8;
+    int32 buy_count = 9;
+    int32 coin = 10;
+    int32 score = 11;
 }

@@ -19,11 +19,10 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserReply, error)
-	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserReply, error)
+	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error)
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
-	VerifyPasswordByName(ctx context.Context, in *VerifyPasswordByNameRequest, opts ...grpc.CallOption) (*VerifyPasswordReply, error)
 	VerifyPasswordByEmail(ctx context.Context, in *VerifyPasswordByEmailRequest, opts ...grpc.CallOption) (*VerifyPasswordReply, error)
 }
 
@@ -44,18 +43,18 @@ func (c *userClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts
 	return out, nil
 }
 
-func (c *userClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error) {
-	out := new(UpdateUserReply)
-	err := c.cc.Invoke(ctx, "/api.account.v1.User/UpdateUser", in, out, opts...)
+func (c *userClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserReply, error) {
+	out := new(DeleteUserReply)
+	err := c.cc.Invoke(ctx, "/api.account.v1.User/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserReply, error) {
-	out := new(DeleteUserReply)
-	err := c.cc.Invoke(ctx, "/api.account.v1.User/DeleteUser", in, out, opts...)
+func (c *userClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error) {
+	out := new(UpdateUserReply)
+	err := c.cc.Invoke(ctx, "/api.account.v1.User/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,15 +79,6 @@ func (c *userClient) ListUser(ctx context.Context, in *ListUserRequest, opts ...
 	return out, nil
 }
 
-func (c *userClient) VerifyPasswordByName(ctx context.Context, in *VerifyPasswordByNameRequest, opts ...grpc.CallOption) (*VerifyPasswordReply, error) {
-	out := new(VerifyPasswordReply)
-	err := c.cc.Invoke(ctx, "/api.account.v1.User/VerifyPasswordByName", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userClient) VerifyPasswordByEmail(ctx context.Context, in *VerifyPasswordByEmailRequest, opts ...grpc.CallOption) (*VerifyPasswordReply, error) {
 	out := new(VerifyPasswordReply)
 	err := c.cc.Invoke(ctx, "/api.account.v1.User/VerifyPasswordByEmail", in, out, opts...)
@@ -103,11 +93,10 @@ func (c *userClient) VerifyPasswordByEmail(ctx context.Context, in *VerifyPasswo
 // for forward compatibility
 type UserServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
-	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
-	VerifyPasswordByName(context.Context, *VerifyPasswordByNameRequest) (*VerifyPasswordReply, error)
 	VerifyPasswordByEmail(context.Context, *VerifyPasswordByEmailRequest) (*VerifyPasswordReply, error)
 	mustEmbedUnimplementedUserServer()
 }
@@ -119,20 +108,17 @@ type UnimplementedUserServer struct {
 func (UnimplementedUserServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedUserServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
-}
 func (UnimplementedUserServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (UnimplementedUserServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
 func (UnimplementedUserServer) GetUser(context.Context, *GetUserRequest) (*GetUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
 func (UnimplementedUserServer) ListUser(context.Context, *ListUserRequest) (*ListUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
-}
-func (UnimplementedUserServer) VerifyPasswordByName(context.Context, *VerifyPasswordByNameRequest) (*VerifyPasswordReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VerifyPasswordByName not implemented")
 }
 func (UnimplementedUserServer) VerifyPasswordByEmail(context.Context, *VerifyPasswordByEmailRequest) (*VerifyPasswordReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyPasswordByEmail not implemented")
@@ -168,24 +154,6 @@ func _User_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).UpdateUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.account.v1.User/UpdateUser",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UpdateUser(ctx, req.(*UpdateUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _User_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteUserRequest)
 	if err := dec(in); err != nil {
@@ -200,6 +168,24 @@ func _User_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).DeleteUser(ctx, req.(*DeleteUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.account.v1.User/UpdateUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateUser(ctx, req.(*UpdateUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -240,24 +226,6 @@ func _User_ListUser_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_VerifyPasswordByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(VerifyPasswordByNameRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).VerifyPasswordByName(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.account.v1.User/VerifyPasswordByName",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).VerifyPasswordByName(ctx, req.(*VerifyPasswordByNameRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _User_VerifyPasswordByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(VerifyPasswordByEmailRequest)
 	if err := dec(in); err != nil {
@@ -288,12 +256,12 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_CreateUser_Handler,
 		},
 		{
-			MethodName: "UpdateUser",
-			Handler:    _User_UpdateUser_Handler,
-		},
-		{
 			MethodName: "DeleteUser",
 			Handler:    _User_DeleteUser_Handler,
+		},
+		{
+			MethodName: "UpdateUser",
+			Handler:    _User_UpdateUser_Handler,
 		},
 		{
 			MethodName: "GetUser",
@@ -302,10 +270,6 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUser",
 			Handler:    _User_ListUser_Handler,
-		},
-		{
-			MethodName: "VerifyPasswordByName",
-			Handler:    _User_VerifyPasswordByName_Handler,
 		},
 		{
 			MethodName: "VerifyPasswordByEmail",

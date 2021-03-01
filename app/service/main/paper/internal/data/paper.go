@@ -3,7 +3,6 @@ package data
 import (
 	"context"
 	errors3 "errors"
-	"fmt"
 	"github.com/go-kratos/kratos/v2/errors"
 	apierr "github.com/mittacy/himusic/service/paper/api/paper/v1/apierr"
 	"github.com/mittacy/himusic/service/paper/internal/biz"
@@ -76,7 +75,6 @@ func (pr *paperRepo) GetPaperCode(ctx context.Context, id int32) (string, error)
 
 func (pr *paperRepo) ListPaper(ctx context.Context, communityId int32, startIndex, pageSize int, columns []string) ([]*biz.Paper, error) {
 	if pageSize <= 0 {
-		fmt.Println("返回错误")
 		return nil, errors.InvalidArgument(apierr.Errors_PageSizeNoZero, "page_num参数必须大于0")
 	}
 	var papers []*biz.Paper

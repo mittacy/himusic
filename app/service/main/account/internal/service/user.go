@@ -28,7 +28,7 @@ func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		Email:    req.Email,
 		Password: req.Password,
 	}
-	err := s.user.CreateUser(user, user.Email, req.Code)
+	err := s.user.CreateUser(ctx, user)
 	if err != nil && errors.IsUnknown(err) {
 		s.log.Errorf("%+v", err)
 	}
@@ -38,13 +38,13 @@ func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 }
 
 func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
-	err := s.user.UpdateUser(&biz.User{
+	err := s.user.UpdateUser(ctx, &biz.User{
 		Id:       req.Id,
 		Name:     req.Name,
 		Email:    req.Email,
 		Password: req.Password,
 		Icon:     req.Icon,
-	}, req.GetWay())
+	})
 	if err != nil && errors.IsUnknown(err) {
 		s.log.Errorf("%+v", err)
 	}
@@ -52,7 +52,7 @@ func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 }
 
 func (s *UserService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserReply, error) {
-	err := s.user.DeleteUser(req.Id)
+	err := s.user.DeleteUser(ctx, req.Id)
 	if err != nil && errors.IsUnknown(err) {
 		s.log.Errorf("%+v", err)
 	}
@@ -60,7 +60,7 @@ func (s *UserService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest)
 }
 
 func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
-	user, err := s.user.GetUser(req.Id)
+	user, err := s.user.GetUser(ctx, req.Id)
 	if err != nil && errors.IsUnknown(err) {
 		s.log.Errorf("%+v", err)
 	}
@@ -79,16 +79,8 @@ func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 	}}, err
 }
 
-func (s *UserService) VerifyPasswordByName(ctx context.Context, req *pb.VerifyPasswordByNameRequest) (*pb.VerifyPasswordReply, error) {
-	isCorrect, err := s.user.VerifyPasswordByName(req.Name, req.Password)
-	if err != nil && errors.IsUnknown(err) {
-		s.log.Errorf("%+v", err)
-	}
-	return &pb.VerifyPasswordReply{Correct: isCorrect}, err
-}
-
 func (s *UserService) VerifyPasswordByEmail(ctx context.Context, req *pb.VerifyPasswordByEmailRequest) (*pb.VerifyPasswordReply, error) {
-	isCorrect, err := s.user.VerifyPasswordByEmail(req.Email, req.Password)
+	isCorrect, err := s.user.VerifyPasswordByEmail(ctx, req.Email, req.Password)
 	if err != nil && errors.IsUnknown(err) {
 		s.log.Errorf("%+v", err)
 	}
@@ -97,7 +89,7 @@ func (s *UserService) VerifyPasswordByEmail(ctx context.Context, req *pb.VerifyP
 
 func (s *UserService) ListUser(ctx context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
 	reply := &pb.ListUserReply{}
-	users, err := s.user.ListUser(int(req.PageNum), int(req.PageSize))
+	users, err := s.user.ListUser(ctx, int(req.PageNum), int(req.PageSize))
 	if err != nil {
 		if errors.IsUnknown(err) {
 			s.log.Errorf("%+v", err)
