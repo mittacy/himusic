@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package api.paper.v1;
+
+option go_package = "github.com/mittacy/himusic/service/paper/api/paper/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.paper.v1";
+
+import "google/api/annotations.proto";
+
+service Paper {
+    rpc CreatePaper (CreatePaperRequest) returns (CreatePaperReply) {
+        option (google.api.http) = {
+            post: "/v1/paper"
+            body: "*"
+        };
+    }
+    rpc UpdatePaper (UpdatePaperRequest) returns (UpdatePaperReply) {
+        option (google.api.http) = {
+            put: "/v1/paper"
+            body: "*"
+        };
+    }
+    rpc DeletePaper (DeletePaperRequest) returns (DeletePaperReply) {
+        option (google.api.http) = {
+            delete: "/v1/paper/{id}"
+        };
+    }
+    rpc GetPaper (GetPaperRequest) returns (GetPaperReply) {
+        option (google.api.http) = {
+            get: "/v1/paper/{id}"
+        };
+    }
+    rpc GetPaperCode (GetPaperCodeRequest) returns (GetPaperCodeReply) {
+        option (google.api.http) = {
+            get: "/v1/paper/{id}"
+            body: "*"
+        };
+    }
+    rpc ListPaper (ListPaperRequest) returns (ListPaperReply) {
+        option (google.api.http) = {
+            get: "/v1/paper"
+            body: "*"
+        };
+    }
+}
+
+message CreatePaperRequest {
+    int32 operator_id = 1;  // 创建者id
+    int32 community_id = 2; // 社区分类id
+    string singer = 3;      // 歌手
+    string song = 4;        // 歌曲名
+    string url = 5;         // 资源链接
+    string code = 6;        // 资源密码
+    int32 coin = 7;         // 收费硬币，0表示免费
+}
+message CreatePaperReply {
+    int32 id = 1;
+}
+
+message UpdatePaperRequest {
+    int32 id = 1;       // 文稿id
+    int32 community_id = 2; // 社区分类id
+    int32 state = 8;    // 状态(0:审核, 1:正常, 2:异常待更新)
+    string singer = 3;      // 歌手
+    string song = 4;        // 歌曲名
+    string url = 5;         // 资源链接
+    string code = 6;        // 资源密码
+    int32 coin = 7;         // 收费硬币，0表示免费
+    int32 view = 9;         // 观看数
+    int32 like = 10;        // 点赞数
+    int64 reply_time = 11;    // 最后回复时间
+    int32 reply_count = 12; // 回复数
+}
+message UpdatePaperReply {}
+
+message DeletePaperRequest {
+    int32 id = 1;
+}
+message DeletePaperReply {}
+
+message GetPaperRequest {
+    int32 id = 1;
+}
+message GetPaperReply {
+    PaperStruct paper = 1;
+}
+
+message GetPaperCodeRequest {
+    int32 id = 1;
+}
+message GetPaperCodeReply {
+    string code = 1;
+}
+
+message ListPaperRequest {
+    int32 community_id = 1;     // 社区id, 0表示全部
+    int32 page_num = 2;         // 页码
+    int32 page_size = 3;        // 页大小
+}
+message ListPaperReply {
+    repeated PaperStruct papers = 1;
+}
+
+message PaperStruct {
+    int32 id = 1;            // 文稿id
+    int32 owner_id = 2;      // 所属主人
+    int32 community_id = 3; // 社区主题id
+    int32 state = 4;        // 状态(0:审核, 1:正常, 2:异常待更新)
+    int32 reply_count = 5;  // 回复数
+    int64 create_time = 6;     // 创建时间
+    int64 update_time = 7;     // 最后更新时间
+    int64 reply_time = 8;      // 最后回复时间
+    string singer = 9;       // 歌手
+    string song = 10;         // 歌曲名
+    string url = 11;          // 资源地址
+    int32 view = 12;         // 访问量
+    int32 like = 13;         // 点赞数
+    int32 coin = 14;         // 所属硬币数
+}

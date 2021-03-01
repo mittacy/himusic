@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package api.paper.v1.errors;
+
+import "kratos/api/annotations.proto";
+
+// 多语言特定包名，用于源代码引用
+option go_package = "github.com/mittacy/himusic/service/paper/api/v1/errors;errors";
+option java_multiple_files = true;
+option java_package = "com.github.mittacy.service.paper.v1.errors";
+option objc_class_prefix = "APICommunityErrors";
+
+enum Community {
+    option (kratos.api.errors) = true;
+
+    PaperNoFound = 0;   // 稿件不存在
+    MusicExists = 1;    // 音乐已存在
+    MysqlErr = 2;       // Mysql操作错误
+    RedisErr = 3;       // Redis操作错误
+    FieldInvalid = 4;   // 字段不符合规定
+    PageSizeNoZero = 5; // 每页大小必须大于0
+}
